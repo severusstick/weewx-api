@@ -2,12 +2,14 @@
 
 from weecfg.extension import ExtensionInstaller
 
-def loader():
-    return weapiInstaller()
 
-class weapiInstaller(ExtensionInstaller):
+def loader():
+    return WeapiInstaller()
+
+
+class WeapiInstaller(ExtensionInstaller):
     def __init__(self):
-        super(weapiInstaller, self).__init__(
+        super(WeapiInstaller, self).__init__(
             version="0.0.1",
             name='weapi',
             description='Nothing to say here yet',

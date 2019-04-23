@@ -1,6 +1,7 @@
 from weewx.restx import StdRESTful, get_site_dict
 import weewx.manager
 
+
 class StdApi(StdRESTful):
 
     _server = None
