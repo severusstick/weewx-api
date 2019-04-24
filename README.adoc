@@ -5,7 +5,7 @@
 
 .API
 |===
-|Method |Name |Data type
+|Method (POST, GET, ...)|Name |Data type (String, ...)
 
 |
 |dateTime
