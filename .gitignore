@@ -1,2 +1,6 @@
 
 \.idea/
+
+php/composer-setup\.php
+
+php/composer\.phar
