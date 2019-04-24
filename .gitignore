@@ -4,3 +4,7 @@
 php/composer-setup\.php
 
 php/composer\.phar
+
+php/Postman/
+
+php/api/storage/framework/cache/
