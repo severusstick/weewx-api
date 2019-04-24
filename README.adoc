@@ -9,46 +9,46 @@
 
 |
 |dateTime
-|
+|dateTime
 
 |
 |barometer
-|
+|double
 
 |
 |outTemp
-|
+|double
 
 |
 |outHumidity
-|
+|double
 
 |
 |windSpeed
-|
+|double
 
 |
 |windDir
-|
+|double
 
 |
 |windGust
-|
+|double
 
 |
 |windGustDir
-|
+|double
 
 |
 |dewpoint
-|
+|double
 
 |
 |hourRain
-|
+|double
 
 |
 |dayRain
-|
+|double
 
 |===
