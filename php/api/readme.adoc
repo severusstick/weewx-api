@@ -31,69 +31,18 @@ endif::[]
 // -- Variables
 :project_name: WEEWX-API
 
-= __{project_name}__
+= PHP: __{project_name}__
 
 toc::[]
 
 // === SETTINGS END === \\
 
-
 # Introduction
+This is the php part, build on the Lumen framework.
 
-{project_name} consists of the following parts:
-
-*  link:python[Extension for WEEWX (Python)]
-*  link:php/api[API on Server (PHP with Lumen)]
-
-# Requirements for the API
-
-
-.API
-|===
-|Method (POST, GET, ...)|Name |Data type (String, ...)
-
-|
-|dateTime
-|dateTime
-
-|
-|barometer
-|double
-
-|
-|outTemp
-|double
-
-|
-|outHumidity
-|double
-
-|
-|windSpeed
-|double
-
-|
-|windDir
-|double
-
-|
-|windGust
-|double
-
-|
-|windGustDir
-|double
-
-|
-|dewpoint
-|double
-
-|
-|hourRain
-|double
-
-|
-|dayRain
-|double
-
-|===
+# Generate MySQL data tables
+....
+php artisan migrate
+....
+should create the data tables, defined in `database/migrations/`.
+Make sure your `.env` file contains the correct MySQL settings. 
