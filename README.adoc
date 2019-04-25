@@ -1,6 +1,51 @@
-# WEEWX-API
+// === SETTINGS === \\
 
-## Requirements for the API
+:doctype: book
+
+// -- Table of Contents
+
+:toc:
+:toclevels: 3
+//:toc-title: Table of Contents // custom ToC title
+:toc-placement!:
+
+// -- Icons
+
+ifdef::env-github[]
+
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+endif::[]
+
+:sectanchors:
+:numbered:
+
+// -- Variables
+:project_name: WEEWX-API
+
+= __{project_name}__
+
+toc::[]
+
+// === SETTINGS END === \\
+
+
+# Summary
+
+{project_name} consists of the following parts:
+
+*  link:python[Extension for WEEWX (Python)]
+*  link:php/api[API on Server (PHP with Lumen)]
+
+# Requirements for the API
 
 
 .API
