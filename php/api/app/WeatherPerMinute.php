@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MinutelyUpdates extends Model
+class WeatherPerMinute extends Model
 {
 
     /**
@@ -13,7 +13,7 @@ class MinutelyUpdates extends Model
      * @var array
      */
     protected $fillable = [
-        'dateTime', 
+        'dateTime',
         'barometer',
         'outTemp',
         'outHumidity',

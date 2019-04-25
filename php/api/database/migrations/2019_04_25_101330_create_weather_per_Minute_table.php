@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWeatherMinutelyTable extends Migration
+class CreateWeatherPerMinuteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWeatherMinutelyTable extends Migration
      */
     public function up()
     {
-        Schema::create('weather_minutely', function (Blueprint $table) {
+        Schema::create('weather_per_minutes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->dateTime('dateTime');
             $table->double('barometer');
@@ -37,6 +37,6 @@ class CreateWeatherMinutelyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weather_minutely');
+        Schema::dropIfExists('weather_per_minutes');
     }
 }
