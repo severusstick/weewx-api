@@ -14,3 +14,14 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+
+    /* ned only get and post at the moment */
+
+    // $router->get('weather_minutely',  ['uses' => 'WeatherMinutelyController@showAll']);
+    $router->get('weather_minutely/{id}', ['uses' => 'WeatherMinutelyController@showOne']);
+    $router->post('weather_minutely', ['uses' => 'WeatherMinutelyController@create']);
+    // $router->delete('weather_minutely/{id}', ['uses' => 'WeatherMinutelyController@delete']);
+    // $router->put('weather_minutely/{id}', ['uses' => 'WeatherMinutelyController@update']);
+});
