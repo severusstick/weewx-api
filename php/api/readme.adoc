@@ -87,6 +87,20 @@ I prefer Postman for API testing.
 
 image::doc/screen_post.png[]
 
+....
+dateTime:2019-04-25
+barometer:95.4
+outTemp:2.7
+outHumidity:95.4
+windSpeed:15
+windDir:180
+windGust:33
+windGustDir:95
+dewpoint:4.5
+hourRain:7
+dayRain:14
+....
+
 ### Get the entry [GET]
 
 image::doc/screen_get.png[]
