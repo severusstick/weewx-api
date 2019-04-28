@@ -19,7 +19,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     /* ned only get and post at the moment */
 
-    //$router->get('weather_minutely',  ['uses' => 'WeatherMinutelyController@showLatest']);
+    $router->get('weather_per_minute',  ['uses' => 'WeatherPerMinuteController@showLatest']);
     $router->get('weather_per_minute/{id}', ['uses' => 'WeatherPerMinuteController@showOne']);
     $router->post('weather_per_minute', ['uses' => 'WeatherPerMinuteController@create']);
     // $router->delete('weather_minutely/{id}', ['uses' => 'WeatherMinutelyController@delete']);

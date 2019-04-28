@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\WeatherPerMinute;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WeatherPerMinuteController extends Controller
 {
@@ -20,7 +21,7 @@ class WeatherPerMinuteController extends Controller
 
     public function showLatest()
     {
-        //return response()->json(WeatherPerMinute::);
+        return response()->json(DB::table('weather_per_minutes')->latest()->first());
     }
 
 
