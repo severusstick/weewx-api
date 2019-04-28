@@ -16,3 +16,7 @@ class StdApi(StdRESTful):
             return
 
         self._server = site_dict['url']
+
+        # Get the database manager dictionary:
+        _manager_dict = weewx.manager.get_manager_dict_from_config(
+            config_dict, 'wx_binding')
