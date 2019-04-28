@@ -21,7 +21,29 @@ class WeatherPerMinuteController extends Controller
 
     public function showLatest()
     {
-        return response()->json(DB::table('weather_per_minutes')->latest()->first());
+        return response()->json([
+			'latest_values' => WeatherPerMinute::latest()->first(),
+			'min_max_average_values' => [
+				'max' => [
+					'barometer' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('barometer'),
+					'outTemp' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('outTemp'),
+					'outHumidity' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('outHumidity'),
+					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('dewpoint')
+				],
+				'min' => [
+					'barometer' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('barometer'),
+					'outTemp' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('outTemp'),
+					'outHumidity' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('outHumidity'),
+					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('dewpoint')
+				],
+				'average' => [
+					'barometer' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('barometer'),
+					'outTemp' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('outTemp'),
+					'outHumidity' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('outHumidity'),
+					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('dewpoint')
+				]
+			]
+		]);
     }
 
 
