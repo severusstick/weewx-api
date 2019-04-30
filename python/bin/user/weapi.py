@@ -1,16 +1,17 @@
-from weewx.restx import StdRESTful, RESTThread, get_site_dict
+import weewx.restx
 import weewx.manager
 import Queue
 import syslog
+import sys
 
 
-class StdApi(StdRESTful):
+class StdApi(weewx.restx.StdRESTful):
     _server = None
 
     def __init__(self, engine, config_dict):
         super(StdApi, self).__init__(engine, config_dict)
 
-        site_dict = get_site_dict(config_dict, 'WeAPI', 'url')
+        site_dict = weewx.restx.get_site_dict(config_dict, 'WeAPI', 'url')
 
         if site_dict is None:  # return if restful API is disabled
             return
@@ -39,7 +40,7 @@ class StdApi(StdRESTful):
         self.archive_queue.put(event.record)
 
 
-class WEAPIThread(RESTThread):
+class WEAPIThread(weewx.restx.RESTThread):
     def __init__(self,
                  queue,
                  manager_dict,
