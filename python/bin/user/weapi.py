@@ -11,6 +11,8 @@ class StdApi(weewx.restx.StdRESTful):
     def __init__(self, engine, config_dict):
         super(StdApi, self).__init__(engine, config_dict)
 
+        syslog.syslog(syslog.LOG_INFO, "=========TEEEEEEEEEESSSSST============")
+
         site_dict = weewx.restx.get_site_dict(config_dict, 'WeAPI', 'url')
 
         if site_dict is None:  # return if restful API is disabled
