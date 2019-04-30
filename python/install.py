@@ -14,5 +14,13 @@ class WeapiInstaller(ExtensionInstaller):
             name='weapi',
             description='Nothing to say here yet',
             author="LimitlessGreen, severusstick",
+            config={
+                'StdRESTful': {
+                    'WeAPI': {
+                        'enable': 'false',
+                        'url': '127.0.0.1'
+                    }
+                }
+            },
             files=[('bin/user', ['bin/user/weapi.py'])]
         )
