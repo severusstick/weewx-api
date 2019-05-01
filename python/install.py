@@ -19,7 +19,7 @@ class WeapiInstaller(ExtensionInstaller):
                 'StdRESTful': {
                     'WeAPI': {
                         'enable': 'false',
-                        'url': '127.0.0.1'
+                        'url': 'http://127.0.0.1'
                     }
                 }
             },
