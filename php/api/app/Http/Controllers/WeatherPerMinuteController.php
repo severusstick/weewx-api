@@ -46,6 +46,33 @@ class WeatherPerMinuteController extends Controller
 		]);
     }
 
+    public function returnCallback()
+	{
+		//calculate callback time
+		$created_time = WeatherPerMinute::where('created_at', '>', Carbon::today())->max('created_at');
+		$archive_interval = 300;
+		if ($created_time != NULL){
+			$created_time = explode(' ', $created_time);
+			$created_time = $created_time[1];
+			$current_time = Carbon::now()->toTimeString();
+			if ($created_time > $current_time){
+				$callback_time = 60;
+			}else{
+				$created_time = explode(':', $created_time);
+				$current_time = explode(':', $current_time);
+				$next_refresh_time = ($created_time[0] * 3600 + $created_time[1] * 60 + $created_time[2]) + $archive_interval;
+				$callback_time = $next_refresh_time - ($current_time[0] * 3600 + $current_time[1] * 60 + $current_time[2]);
+				if ($callback_time <= 0) $callback_time = 60;
+			}
+		}else{
+			$callback_time = 60;
+		}
+
+		return response()->json([
+			'latest_id' => WeatherPerMinute::latest()->first('id'),
+			'callback_time' => $callback_time
+		]);
+	}
 
     public function create(Request $request)
     {
