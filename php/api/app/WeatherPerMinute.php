@@ -13,7 +13,6 @@ class WeatherPerMinute extends Model
      * @var array
      */
     protected $fillable = [
-        'dateTime',
         'barometer',
         'outTemp',
         'outHumidity',

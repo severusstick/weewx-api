@@ -15,7 +15,6 @@ class CreateWeatherPerMinuteTable extends Migration
     {
         Schema::create('weather_per_minutes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->dateTime('dateTime');
             $table->double('barometer');
             $table->double('outTemp');
             $table->double('outHumidity');
