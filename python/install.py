@@ -14,6 +14,7 @@ class WeapiInstaller(ExtensionInstaller):
             name='weapi',
             description='Nothing to say here yet',
             author="LimitlessGreen, severusstick",
+            restful_services=['user.weapi.StdApi'],
             config={
                 'StdRESTful': {
                     'WeAPI': {
