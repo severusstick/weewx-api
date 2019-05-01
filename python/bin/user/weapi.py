@@ -13,7 +13,7 @@ class StdApi(weewx.restx.StdRESTful):
     def __init__(self, engine, config_dict):
         super(StdApi, self).__init__(engine, config_dict)
 
-        site_dict = weewx.restx.get_site_dict(config_dict, 'WeAPI', 'url')
+        site_dict = dict(weewx.restx.get_site_dict(config_dict, 'WeAPI', 'url'))
 
         if site_dict is None:  # return if restful API is disabled
             return
@@ -22,13 +22,15 @@ class StdApi(weewx.restx.StdRESTful):
         site_dict['manager_dict'] = weewx.manager.get_manager_dict_from_config(
             config_dict, 'wx_binding')
 
+        # Get archive update rate
+        site_dict['archive_interval'] = dict(dict(config_dict).get('StdArchive')).get('archive_interval')
+
         site_dict.setdefault('latitude', engine.stn_info.latitude_f)
         site_dict.setdefault('longitude', engine.stn_info.longitude_f)
         site_dict.setdefault('station_type', config_dict['Station'].get(
             'station_type', 'Unknown'))
 
         self._server = site_dict['url']
-
 
         self.archive_queue = Queue.Queue()
 
@@ -46,7 +48,7 @@ class StdApi(weewx.restx.StdRESTful):
 
 class WEAPIThread(weewx.restx.RESTThread):
     def __init__(self, queue, manager_dict,
-                 url,
+                 url, archive_interval,
                  latitude, longitude, station_type,
                  post_interval=600, max_backlog=sys.maxint, stale=600,
                  log_success=True, log_failure=True,
@@ -82,6 +84,7 @@ class WEAPIThread(weewx.restx.RESTThread):
         #  ... get any POST payload...
 
         _request.add_data(urllib.urlencode(_full_record))
+        _request.add_data(urllib.urlencode(self.post_interval))
 
         self.post_with_retries(_request)
 
