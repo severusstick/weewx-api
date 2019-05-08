@@ -87,18 +87,21 @@ class WEAPIThread(weewx.restx.RESTThread):
 
         if record["packet_type"] == "live":
             post_url = self.server_url + self.live_packets_route
+            _full_record = record
         elif record["packet_type"] == "minutely":
             post_url = self.server_url + self.minutely_archive_route
-        else:
-            return
 
-        # Get the full record by querying the database ...
-        _full_record = self.get_record(record, dbmanager)
+            # Get the full record by querying the database ...
+            _full_record = self.get_record(record, dbmanager)
+        else:
+            syslog.syslog(syslog.LOG_INFO, "restx: WEAPI: "
+                                           "En Error encored by finding the route")
+            return
 
         syslog.syslog(syslog.LOG_INFO, "restx: WEAPI: "
                                        "Data posted to %s" % post_url)
         # ... check it ...
-        self.check_this_record(_full_record)
+        # self.check_this_record(_full_record)
         # ... get the Request obj to go with it...
         _request = self.get_request(post_url)
         #  ... get any POST payload...
