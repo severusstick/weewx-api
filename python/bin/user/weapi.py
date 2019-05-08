@@ -35,12 +35,12 @@ class StdApi(weewx.restx.StdRESTful):
             'station_type', 'Unknown'))
 
         self.archive_queue = Queue.Queue()
-        self.live_packets_queue = Queue.Queue()
 
         self.archive_thread = WEAPIThread(self.archive_queue, **site_dict)
         self.archive_thread.start()
 
         self.bind(weewx.NEW_ARCHIVE_RECORD, self.new_archive_record)  # Event binding
+        self.bind(weewx.NEW_LOOP_PACKET, self.new_loop_packet)
 
 
         syslog.syslog(syslog.LOG_INFO, "restx: WEAPI: "
