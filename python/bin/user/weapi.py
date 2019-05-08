@@ -47,12 +47,12 @@ class StdApi(weewx.restx.StdRESTful):
                                        "Data will be uploaded")
 
     def new_archive_record(self, event):
-        packet = event.packet
+        packet = event.record
         packet["packet_type"] = "minutely"
         self.archive_queue.put(packet)
 
     def new_loop_packet(self, event):
-        packet = event.record
+        packet = event.packet
         packet["packet_type"] = "live"
         self.archive_queue.put(packet)
 
