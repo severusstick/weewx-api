@@ -22,7 +22,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('weather_per_minute',  ['uses' => 'WeatherPerMinuteController@showLatest']);
     $router->get('weather_per_minute/{id}', ['uses' => 'WeatherPerMinuteController@showOne']);
     $router->get('weather_per_minute/callback', ['uses' => 'WeatherPerMinuteController@returnCallback']);
+    $router->get('weather_per_minute/daily_summary', ['uses' => 'WeatherPerMinuteController@returnDailySummary']);
     $router->post('weather_per_minute', ['uses' => 'WeatherPerMinuteController@create']);
+    $router->post('live_packets', ['uses' => 'LiveDataController@updateLiveData']);
     // $router->delete('weather_minutely/{id}', ['uses' => 'WeatherMinutelyController@delete']);
     // $router->put('weather_minutely/{id}', ['uses' => 'WeatherMinutelyController@update']);
 });

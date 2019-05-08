@@ -28,19 +28,22 @@ class WeatherPerMinuteController extends Controller
 					'barometer' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('barometer'),
 					'outTemp' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('outTemp'),
 					'outHumidity' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('outHumidity'),
-					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('dewpoint')
+					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('dewpoint'),
+					'windSpeed' => WeatherPerMinute::where('created_at', '>', Carbon::today())->max('windSpeed')
 				],
 				'min' => [
 					'barometer' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('barometer'),
 					'outTemp' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('outTemp'),
 					'outHumidity' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('outHumidity'),
-					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('dewpoint')
+					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('dewpoint'),
+					'windSpeed' => WeatherPerMinute::where('created_at', '>', Carbon::today())->min('windSpeed')
 				],
 				'average' => [
 					'barometer' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('barometer'),
 					'outTemp' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('outTemp'),
 					'outHumidity' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('outHumidity'),
-					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('dewpoint')
+					'dewpoint' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('dewpoint'),
+					'windSpeed' => WeatherPerMinute::where('created_at', '>', Carbon::today())->avg('windSpeed')
 				]
 			]
 		]);
@@ -72,6 +75,31 @@ class WeatherPerMinuteController extends Controller
 			'latest_id' => WeatherPerMinute::latest()->first('id'),
 			'callback_time' => $callback_time
 		]);
+	}
+
+	public function returnDailySummary()
+	{
+		$count_time = date('G') - 23;
+		$from_time = date('G', time()-82800);
+		$to_time = date('G');
+		$from_date = date('Y-m-d', time()-86400);
+		$to_date = date('Y-m-d');
+		$time = '';
+		for ($i=0; $i<=23; $i++){
+			if ($count_time + $i < 0){
+				$time = $from_time + $i;
+				$from_date = date('Y-m-d', time()-86400);
+			}else{
+				$time = $count_time + $i;
+				$from_date = date('Y-m-d');
+			}
+			$json_output[$time]['outTemp'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('outTemp');
+			$json_output[$time]['barometer'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('barometer');
+			$json_output[$time]['outHumidity'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('outHumidity');
+			$json_output[$time]['dayRain'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('dayRain');
+			$json_output[$time]['windSpeed'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('windSpeed');
+		}
+		return response()->json($json_output);
 	}
 
     public function create(Request $request)
