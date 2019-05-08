@@ -10,7 +10,7 @@ def loader():
 class WeapiInstaller(ExtensionInstaller):
     def __init__(self):
         super(WeapiInstaller, self).__init__(
-            version="0.0.1",
+            version="0.0.2b",
             name='weapi',
             description='Nothing to say here yet',
             author="LimitlessGreen, severusstick",
@@ -19,7 +19,9 @@ class WeapiInstaller(ExtensionInstaller):
                 'StdRESTful': {
                     'WeAPI': {
                         'enable': 'false',
-                        'url': 'http://127.0.0.1'
+                        'url': 'http://127.0.0.1',
+                        'live_packets_route': 'live',
+                        'minutely_archive_route': "minutely"
                     }
                 }
             },
