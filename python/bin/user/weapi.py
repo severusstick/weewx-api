@@ -27,7 +27,7 @@ class StdApi(weewx.restx.StdRESTful):
             config_dict, 'wx_binding')
 
         # Get archive update rate
-        site_dict['archive_interval'] = dict(dict(config_dict).get('StdArchive')).get('archive_interval')
+        self.archive_interval = dict(dict(config_dict).get('StdArchive')).get('archive_interval')
 
         site_dict.setdefault('latitude', engine.stn_info.latitude_f)
         site_dict.setdefault('longitude', engine.stn_info.longitude_f)
@@ -49,17 +49,19 @@ class StdApi(weewx.restx.StdRESTful):
     def new_archive_record(self, event):
         packet = event.record
         packet["packet_type"] = "minutely"
+        packet["update_rate"] = self.archive_interval
         self.archive_queue.put(packet)
 
     def new_loop_packet(self, event):
         packet = event.packet
         packet["packet_type"] = "live"
+        packet["update_rate"] = "live"
         self.archive_queue.put(packet)
 
 
 class WEAPIThread(weewx.restx.RESTThread):
     def __init__(self, queue, manager_dict,
-                 url, live_packets_route, minutely_archive_route, archive_interval,
+                 url, live_packets_route, minutely_archive_route,
                  latitude, longitude, station_type,
                  post_interval=600, max_backlog=sys.maxint, stale=600,
                  log_success=True, log_failure=True,
@@ -101,13 +103,12 @@ class WEAPIThread(weewx.restx.RESTThread):
         syslog.syslog(syslog.LOG_INFO, "restx: WEAPI: "
                                        "Data posted to %s" % post_url)
         # ... check it ...
-        # self.check_this_record(_full_record)
+        self.check_this_record(_full_record)
         # ... get the Request obj to go with it...
         _request = self.get_request(post_url)
         #  ... get any POST payload...
 
         _request.add_data(urllib.urlencode(_full_record))
-        _request.add_data(urllib.urlencode(self.post_interval))
 
         self.post_with_retries(_request)
 
