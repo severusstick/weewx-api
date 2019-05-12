@@ -14,6 +14,9 @@ class WeatherPerMinute extends Model
      */
     protected $fillable = [
         'dateTime',
+        'heatindex',
+        'maxSolarRad',
+        'consBatteryVoltage',
         'barometer',
         'outTemp',
         'outHumidity',
@@ -21,9 +24,22 @@ class WeatherPerMinute extends Model
         'windDir',
         'windGust',
         'windGustDir',
+        'windchill',
         'dewpoint',
+        'UV',
+        'radiation',
         'hourRain',
-        'dayRain'
+        'dayRain',
+        'stormRain',
+        'cloudbase',
+        'sunrise',
+        'sunset',
+        'forecastIcon',
+        'forecastRule',
+        'trendIcon',
+        'outsideAlarm1',
+        'outsideAlarm2',
+        'rainAlarm'
     ];
 
     /**
