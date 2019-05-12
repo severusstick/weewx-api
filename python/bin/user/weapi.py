@@ -17,6 +17,7 @@ class StdApi(weewx.restx.StdRESTful):
                                                    'WeAPI',
                                                    'url',
                                                    'live_packets_route',
+                                                   'skip_x_live_packets'
                                                    'minutely_archive_route'))
 
         if site_dict is None:  # return if restful API is disabled
@@ -42,7 +43,6 @@ class StdApi(weewx.restx.StdRESTful):
         self.bind(weewx.NEW_ARCHIVE_RECORD, self.new_archive_record)  # Event binding
         self.bind(weewx.NEW_LOOP_PACKET, self.new_loop_packet)
 
-
         syslog.syslog(syslog.LOG_INFO, "restx: WEAPI: "
                                        "Data will be uploaded")
 
@@ -61,7 +61,7 @@ class StdApi(weewx.restx.StdRESTful):
 
 class WEAPIThread(weewx.restx.RESTThread):
     def __init__(self, queue, manager_dict,
-                 url, live_packets_route, minutely_archive_route,
+                 url, live_packets_route, skip_x_live_packets, minutely_archive_route,
                  latitude, longitude, station_type,
                  post_interval=600, max_backlog=sys.maxint, stale=600,
                  log_success=True, log_failure=True,
@@ -80,6 +80,8 @@ class WEAPIThread(weewx.restx.RESTThread):
         self.server_url = url
         self.live_packets_route = live_packets_route
         self.minutely_archive_route = minutely_archive_route
+        self.skip_x_live_packets = skip_x_live_packets
+        self.skip_x_live_packets_counter = 0
 
     def process_record(self, record, dbmanager):
         """Default version of process_record.
@@ -88,6 +90,13 @@ class WEAPIThread(weewx.restx.RESTThread):
         protocols, but it can always be replaced by a specializing class."""
 
         if record["packet_type"] == "live":
+
+            if self.skip_x_live_packets_counter != 0:
+                self.skip_x_live_packets_counter = (self.skip_x_live_packets_counter + 1) % self.skip_x_live_packets
+                return
+
+            self.skip_x_live_packets_counter += 1
+
             post_url = self.server_url + self.live_packets_route
             _full_record = record
         elif record["packet_type"] == "minutely":
@@ -111,6 +120,7 @@ class WEAPIThread(weewx.restx.RESTThread):
         _request.add_data(urllib.urlencode(_full_record))
 
         self.post_with_retries(_request)
+
 
 
 

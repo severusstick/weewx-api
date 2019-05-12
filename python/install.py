@@ -21,6 +21,7 @@ class WeapiInstaller(ExtensionInstaller):
                         'enable': 'false',
                         'url': 'http://127.0.0.1/api/',
                         'live_packets_route': 'live',
+                        'skip_x_live_packets': 3,
                         'minutely_archive_route': "minutely"
                     }
                 }
