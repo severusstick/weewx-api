@@ -8,3 +8,5 @@ php/composer\.phar
 php/Postman/
 
 php/api/storage/framework/cache/
+
+*.pyc
