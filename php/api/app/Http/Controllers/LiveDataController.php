@@ -9,7 +9,7 @@ class LiveDataController extends Controller
 {
 	public function updateLiveData(Request $request)
 	{
-		$live_weather = LiveData::where('id', 1)->updateOrCreate($request->all());
+		$live_weather = LiveData::updateOrCreate(['id' => 1], $request->all());
 
 		return response()->json($live_weather, 200);
 	}
