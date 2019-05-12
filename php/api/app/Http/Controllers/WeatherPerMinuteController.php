@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\WeatherPerMinute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class WeatherPerMinuteController extends Controller
 {
@@ -81,23 +82,24 @@ class WeatherPerMinuteController extends Controller
 	{
 		$count_time = date('G') - 23;
 		$from_time = date('G', time()-82800);
-		$to_time = date('G');
-		$from_date = date('Y-m-d', time()-86400);
-		$to_date = date('Y-m-d');
 		$time = '';
 		for ($i=0; $i<=23; $i++){
 			if ($count_time + $i < 0){
 				$time = $from_time + $i;
 				$from_date = date('Y-m-d', time()-86400);
+				$to_date = date('Y-m-d', time()-86400);
 			}else{
 				$time = $count_time + $i;
 				$from_date = date('Y-m-d');
+				$to_date = date('Y-m-d');
 			}
 			$json_output[$time]['outTemp'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('outTemp');
 			$json_output[$time]['barometer'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('barometer');
 			$json_output[$time]['outHumidity'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('outHumidity');
 			$json_output[$time]['dayRain'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('dayRain');
 			$json_output[$time]['windSpeed'] = WeatherPerMinute::whereBetween('created_at', [$from_date.' '.$time.':00:00', $to_date.' '.$time.':59:59'])->avg('windSpeed');
+			$json_output[$time]['from_date'] = $from_date;
+			$json_output[$time]['to_date'] = $to_date;
 		}
 		return response()->json($json_output);
 	}
