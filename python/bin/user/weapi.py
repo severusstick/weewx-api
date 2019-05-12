@@ -17,7 +17,7 @@ class StdApi(weewx.restx.StdRESTful):
                                                    'WeAPI',
                                                    'url',
                                                    'live_packets_route',
-                                                   'skip_x_live_packets'
+                                                   'skip_x_live_packets',
                                                    'minutely_archive_route'))
 
         if site_dict is None:  # return if restful API is disabled
