@@ -15,16 +15,17 @@ class CreateWeatherPerMinuteTable extends Migration
     {
         Schema::create('weather_per_minutes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->double('barometer');
-            $table->double('outTemp');
-            $table->double('outHumidity');
-            $table->double('windSpeed');
-            $table->double('windDir');
-            $table->double('windGust');
-            $table->double('windGustDir');
-            $table->double('dewpoint');
-            $table->double('hourRain');
-            $table->double('dayRain');
+            $table->bigInteger('dateTime')->unique();
+            $table->double('barometer')->nullable();
+            $table->double('outTemp')->nullable();
+            $table->double('outHumidity')->nullable();
+            $table->double('windSpeed')->nullable();
+            $table->double('windDir')->nullable();
+            $table->double('windGust')->nullable();
+            $table->double('windGustDir')->nullable();
+            $table->double('dewpoint')->nullable();
+            $table->double('hourRain')->nullable();
+            $table->double('dayRain')->nullable();
             $table->timestamps();
         });
     }
