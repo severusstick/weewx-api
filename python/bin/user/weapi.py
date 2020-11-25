@@ -9,6 +9,8 @@ from urllib.parse import urlencode
 
 # Python 2/3 compatiblity shims
 import six
+from six.moves import urllib
+
 #from six.moves import http_client
 #from six.moves import queue
 #from six.moves import urllib as urllib
