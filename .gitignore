@@ -10,3 +10,7 @@ php/Postman/
 php/api/storage/framework/cache/
 
 *.pyc
+
+python/weewx-4.2.0/
+
+venv/
