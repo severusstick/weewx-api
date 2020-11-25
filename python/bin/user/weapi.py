@@ -24,7 +24,6 @@ class StdApi(weewx.restx.StdRESTful):
                                                    'url',
                                                    'api_token',
                                                    'live_packets_route',
-                                                   'skip_x_live_packets',
                                                    'minutely_archive_route'))
 
         if site_dict is None:  # return if restful API is disabled
@@ -66,7 +65,6 @@ class StdApi(weewx.restx.StdRESTful):
         packet = event.packet
         packet["packet_type"] = "live"
         packet["update_rate"] = "live"
-        packet["api_token"] = self.api_token
         self.archive_queue.put(packet)
 
 
@@ -102,12 +100,6 @@ class WEAPIThread(weewx.restx.RESTThread):
 
         if record["packet_type"] == "live":
 
-            if self.skip_x_live_packets_counter != 0:
-                self.skip_x_live_packets_counter = (self.skip_x_live_packets_counter + 1) % self.skip_x_live_packets
-                return
-
-            self.skip_x_live_packets_counter += 1
-
             post_url = self.server_url + self.live_packets_route
             _full_record = record
         elif record["packet_type"] == "minutely":
@@ -124,13 +116,24 @@ class WEAPIThread(weewx.restx.RESTThread):
                                        "Data posted to %s" % post_url)
         # ... check it ...
         self.check_this_record(_full_record)
-        # ... get the Request obj to go with it...
-        _request = self.get_request(post_url)
+        # ... format the URL, using the relevant protocol ...
+        _url = self.format_url(_full_record)
+        # ... get the Request to go with it...
+        _request = self.get_request(_url)
         #  ... get any POST payload...
+        _payload = self.get_post_body(_full_record)
+        # ... add a proper Content-Type if needed...
+        if _payload:
+            _request.add_header('Content-Type', _payload[1])
+            data = _payload[0]
+        else:
+            data = None
+        # ... check to see if this is just a drill...
+        if self.skip_upload:
+            raise AbortedPost("Skip post")
 
-        _request.add_data(urlencode(_full_record))
-
-        self.post_with_retries(_request)
+        # ... then, finally, post it
+        self.post_with_retries(_request, data)
 
 
 
