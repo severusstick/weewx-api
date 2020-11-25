@@ -48,5 +48,5 @@ class WeapiInstaller(ExtensionInstaller):
             author="LimitlessGreen, severusstick",
             restful_services=['user.weapi.StdApi'],
             config=weapi_config_dict,
-            files=[('bin/user', ['bin/user/weapi.py'])]
+            files=[('bin/user', ['bin/user/weapi.py', 'bin/user/requests.py'])]
         )
