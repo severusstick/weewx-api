@@ -146,8 +146,8 @@ class WEAPIThread(weewx.restx.RESTThread):
         http.request(
             'POST',
             url,
-            fields=data,
-            headers={"User-Agent": f"weewx/{weewx.__version__}"}
+            data
+            #headers={"User-Agent": f"weewx/{weewx.__version__}"}
             #retries=self.max_tries
             #retries=5 # TODO: Use self.max_tries
         )
