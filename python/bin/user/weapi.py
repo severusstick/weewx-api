@@ -136,6 +136,7 @@ class WEAPIThread(weewx.restx.RESTThread):
                                        "Data posted to %s" % post_url)
         # ... check it ...
         self.check_this_record(_full_record)
+        syslog.syslog(_full_record)
 
         # ... then, finally, post it
         self.send_post_request(_full_record, post_url)
