@@ -65,6 +65,7 @@ class StdApi(weewx.restx.StdRESTful):
         packet = event.packet
         packet["packet_type"] = "live"
         packet["update_rate"] = "live"
+        packet["api_token"] = self.api_token
         self.archive_queue.put(packet)
 
 
@@ -116,10 +117,8 @@ class WEAPIThread(weewx.restx.RESTThread):
                                        "Data posted to %s" % post_url)
         # ... check it ...
         self.check_this_record(_full_record)
-        # ... format the URL, using the relevant protocol ...
-        _url = self.format_url(_full_record)
         # ... get the Request to go with it...
-        _request = self.get_request(_url)
+        _request = self.get_request(post_url)
         #  ... get any POST payload...
         _payload = self.get_post_body(_full_record)
         # ... add a proper Content-Type if needed...
