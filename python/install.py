@@ -2,8 +2,11 @@
 
 import configobj
 from weecfg.extension import ExtensionInstaller
-from StringIO import StringIO
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 weapi_config = """
     [StdRESTful]
