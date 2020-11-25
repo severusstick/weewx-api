@@ -6,14 +6,14 @@ import syslog
 import sys
 #import urllib2
 from urllib.parse import urlencode
+import urllib3
 
 # Python 2/3 compatiblity shims
 import six
-from six.moves import urllib
+#from six.moves import urllib
 
 #from six.moves import http_client
 #from six.moves import queue
-#from six.moves import urllib as urllib
 
 
 class StdApi(weewx.restx.StdRESTful):
@@ -95,6 +95,23 @@ class WEAPIThread(weewx.restx.RESTThread):
         self.skip_x_live_packets = skip_x_live_packets
         self.skip_x_live_packets_counter = 0
 
+    def post_request(self, request, data=None):
+        """Post a request object. This version does not catch any HTTP
+        exceptions.
+
+        Specializing versions can can catch any unusual exceptions that might
+        get raised by their protocol.
+
+        request: An instance of urllib.request.Request
+
+        data: If given, the request will be done as a POST. Otherwise,
+        as a GET. [optional]
+        """
+        # Data might be a unicode string. Encode it first.
+        data_bytes = six.ensure_binary(data) if data is not None else None
+        _response = urllib.request.urlopen(request, data=data_bytes, timeout=self.timeout)
+        return _response
+
     def process_record(self, record, dbmanager):
         """Default version of process_record.
 
@@ -119,23 +136,19 @@ class WEAPIThread(weewx.restx.RESTThread):
                                        "Data posted to %s" % post_url)
         # ... check it ...
         self.check_this_record(_full_record)
-        # ... get the Request to go with it...
-        _request = self.get_request(post_url)
-        #  ... get any POST payload...
-        _payload = self.get_post_body(_full_record)
-        # ... add a proper Content-Type if needed...
-        if _payload:
-            _request.add_header('Content-Type', _payload[1])
-            data = _payload[0]
-        else:
-            data = None
-        # ... check to see if this is just a drill...
-        if self.skip_upload:
-            raise AbortedPost("Skip post")
 
         # ... then, finally, post it
-        self.post_with_retries(_request, data)
+        self.send_post_request(_full_record, post_url)
 
+    def send_post_request(self, data, url):
+        http = urllib3.PoolManager()
 
+        http.request(
+            'POST',
+            url,
+            fields=data,
+            headers={"User-Agent": "weewx/%s" % weewx.__version__},
+            retries=self.max_tries
+        )
 
 
