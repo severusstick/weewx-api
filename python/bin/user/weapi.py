@@ -1,11 +1,17 @@
 import weewx.restx
 import weewx.manager
 import weewx.engine
-import Queue
+import queue
 import syslog
 import sys
-import urllib2
-import urllib
+#import urllib2
+from urllib.parse import urlencode
+
+# Python 2/3 compatiblity shims
+import six
+#from six.moves import http_client
+#from six.moves import queue
+#from six.moves import urllib as urllib
 
 
 class StdApi(weewx.restx.StdRESTful):
@@ -38,7 +44,7 @@ class StdApi(weewx.restx.StdRESTful):
         site_dict.setdefault('station_type', config_dict['Station'].get(
             'station_type', 'Unknown'))
 
-        self.archive_queue = Queue.Queue()
+        self.archive_queue = queue.Queue()
 
         self.archive_thread = WEAPIThread(self.archive_queue, **site_dict)
         self.archive_thread.start()
@@ -68,7 +74,7 @@ class WEAPIThread(weewx.restx.RESTThread):
     def __init__(self, queue, manager_dict,
                  url, api_token, live_packets_route, skip_x_live_packets, minutely_archive_route,
                  latitude, longitude, station_type,
-                 post_interval=600, max_backlog=sys.maxint, stale=600,
+                 post_interval=600, max_backlog=six.MAXSIZE, stale=600,
                  log_success=True, log_failure=True,
                  timeout=10, max_tries=3, retry_wait=5, skip_upload=False):
 
@@ -76,7 +82,7 @@ class WEAPIThread(weewx.restx.RESTThread):
                                           protocol_name="WEAPI",
                                           essentials={},
                                           manager_dict=manager_dict,
-                                          post_interval=None, max_backlog=sys.maxint, stale=None,
+                                          post_interval=None, max_backlog=six.MAXSIZE, stale=None,
                                           log_success=True, log_failure=True,
                                           timeout=10, max_tries=3, retry_wait=5, retry_login=3600,
                                           softwaretype="weewx-%s" % weewx.__version__,
@@ -122,7 +128,7 @@ class WEAPIThread(weewx.restx.RESTThread):
         _request = self.get_request(post_url)
         #  ... get any POST payload...
 
-        _request.add_data(urllib.urlencode(_full_record))
+        _request.add_data(urlencode(_full_record))
 
         self.post_with_retries(_request)
 
