@@ -16,7 +16,9 @@ weapi_config = """
             # Please don't forget the "/" at the end or the url,
             # it will be concatenated with the routes
             url = http://127.0.0.1:9000/api/
-            
+            # API-Token (if it is needed for your api to authenticate)
+            api_token = 
+
             # == Config the routes here === #
             
             # Route for live packets (weewx loop packets)            

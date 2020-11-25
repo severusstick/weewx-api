@@ -16,6 +16,7 @@ class StdApi(weewx.restx.StdRESTful):
         site_dict = dict(weewx.restx.get_site_dict(config_dict,
                                                    'WeAPI',
                                                    'url',
+                                                   'api_token',
                                                    'live_packets_route',
                                                    'skip_x_live_packets',
                                                    'minutely_archive_route'))
@@ -30,6 +31,8 @@ class StdApi(weewx.restx.StdRESTful):
         # Get archive update rate
         self.archive_interval = dict(dict(config_dict).get('StdArchive')).get('archive_interval')
 
+        self.api_token = site_dict["api_token"]
+
         site_dict.setdefault('latitude', engine.stn_info.latitude_f)
         site_dict.setdefault('longitude', engine.stn_info.longitude_f)
         site_dict.setdefault('station_type', config_dict['Station'].get(
@@ -41,7 +44,7 @@ class StdApi(weewx.restx.StdRESTful):
         self.archive_thread.start()
 
         self.bind(weewx.NEW_ARCHIVE_RECORD, self.new_archive_record)  # Event binding
-        self.bind(weewx.NEW_LOOP_PACKET, self.new_loop_packet)
+#        self.bind(weewx.NEW_LOOP_PACKET, self.new_loop_packet)
 
         syslog.syslog(syslog.LOG_INFO, "restx: WEAPI: "
                                        "Data will be uploaded")
@@ -50,18 +53,20 @@ class StdApi(weewx.restx.StdRESTful):
         packet = event.record
         packet["packet_type"] = "minutely"
         packet["update_rate"] = self.archive_interval
+        packet["api_token"] = self.api_token
         self.archive_queue.put(packet)
 
     def new_loop_packet(self, event):
         packet = event.packet
         packet["packet_type"] = "live"
         packet["update_rate"] = "live"
+        packet["api_token"] = self.api_token
         self.archive_queue.put(packet)
 
 
 class WEAPIThread(weewx.restx.RESTThread):
     def __init__(self, queue, manager_dict,
-                 url, live_packets_route, skip_x_live_packets, minutely_archive_route,
+                 url, api_token, live_packets_route, skip_x_live_packets, minutely_archive_route,
                  latitude, longitude, station_type,
                  post_interval=600, max_backlog=sys.maxint, stale=600,
                  log_success=True, log_failure=True,
