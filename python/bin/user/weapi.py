@@ -149,7 +149,7 @@ class WEAPIThread(weewx.restx.RESTThread):
             fields=data,
             headers={"User-Agent": "weewx/%s" % weewx.__version__},
             #retries=self.max_tries
-            retries=5 # TODO: Use self.max_tries
+            #retries=5 # TODO: Use self.max_tries
         )
 
 
